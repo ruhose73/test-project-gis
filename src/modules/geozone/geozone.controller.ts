@@ -1,44 +1,98 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
-import { CreatePolygonDto, PaginationDto , UpdatePolygonDto } from './dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  CreatePolygonDto,
+  GetPolygonDto,
+  PaginationDto,
+  UpdatePolygonDto,
+} from './dto';
 import { GeozoneService } from './geozone.service';
+import { CheckPolygonGuard } from './quard/checkPolygon.guard';
 
+@ApiTags(`Геозоны`)
 @Controller('/geozone')
 export class GeozoneController {
   constructor(private readonly geozoneService: GeozoneService) {}
 
+  @ApiOperation({ summary: `Создание геозоны` })
+  @ApiResponse({ status: 200, type: GetPolygonDto })
+  @ApiResponse({ status: 400, description: `BAD_REQUEST` })
+  @ApiResponse({ status: 500, description: `INTERNAL_SERVER_ERROR` })
+  @UseGuards(CheckPolygonGuard)
   @Post()
-  async createPolygon(@Body() createPolygonDto: CreatePolygonDto) {
-    return await this.geozoneService.createPolygon(createPolygonDto)
+  async createPolygon(
+    @Body() createPolygonDto: CreatePolygonDto,
+  ): Promise<GetPolygonDto> {
+    return await this.geozoneService.createPolygon(createPolygonDto);
   }
-
-  @Post('/sql')
-  async createPolygonSql(@Body() createPolygonDto: CreatePolygonDto) {
-    return await this.geozoneService.createPolygonSql(createPolygonDto)
-  }
-
-  @Put()
-  async updatePolygon(@Body() updatePolygonDto: UpdatePolygonDto) {
-    return await this.geozoneService.updatePolygon(updatePolygonDto)
-  }
-
+  
+  @ApiOperation({ summary: `Получение всех геозон` })
+  @ApiResponse({ status: 200, type: [GetPolygonDto] })
+  @ApiResponse({ status: 400, description: `BAD_REQUEST` })
+  @ApiResponse({ status: 500, description: `INTERNAL_SERVER_ERROR` })
   @Get()
-  async getPolygons(paginationDto: PaginationDto  ) {
-    return await this.geozoneService.getPolygons(paginationDto)
+  async getPolygons(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<GetPolygonDto[] | []> {
+    return await this.geozoneService.getPolygons(paginationDto);
   }
 
+  @ApiOperation({ summary: `Обновление геозоны` })
+  @ApiParam({
+    name: 'id',
+    description: 'ID геозоны',
+  })
+  @ApiResponse({ status: 200, type: GetPolygonDto })
+  @ApiResponse({ status: 400, description: `BAD_REQUEST` })
+  @ApiResponse({ status: 500, description: `INTERNAL_SERVER_ERROR` })
+  @UseGuards(CheckPolygonGuard)
+  @Put(':id')
+  async updatePolygon(
+    @Param('id', ParseUUIDPipe) geozoneId: string,
+    @Body() updatePolygonDto: UpdatePolygonDto,
+  ): Promise<GetPolygonDto> {
+    return await this.geozoneService.updatePolygon(geozoneId, updatePolygonDto);
+  }
+
+  @ApiOperation({ summary: `Получение геозоны по ID` })
+  @ApiParam({
+    name: 'id',
+    description: 'ID геозоны',
+  })
+  @ApiResponse({ status: 200, type: GetPolygonDto })
+  @ApiResponse({ status: 400, description: `BAD_REQUEST` })
+  @ApiResponse({ status: 500, description: `INTERNAL_SERVER_ERROR` })
   @Get(':id')
-  async getPolygonById(@Param('id', ParseUUIDPipe) geozoneId:string) {
-    return await this.geozoneService.getPolygonById(geozoneId)
+  async getPolygonById(
+    @Param('id', ParseUUIDPipe) geozoneId: string,
+  ): Promise<GetPolygonDto> {
+    return await this.geozoneService.getPolygonById(geozoneId);
   }
 
-  @Get(':id')
-  async getPolygonByIdSql(@Param('id', ParseUUIDPipe) geozoneId:string) {
-    return await this.geozoneService.getPolygonByIdSql(geozoneId)
-  }
-
+  
+  @ApiOperation({ summary: `Удаление геозоны по ID` })
+  @ApiParam({
+    name: 'id',
+    description: 'ID геозоны',
+  })
+  @ApiResponse({ status: 200, description: `OK` })
+  @ApiResponse({ status: 400, description: `BAD_REQUEST` })
+  @ApiResponse({ status: 500, description: `INTERNAL_SERVER_ERROR` })
   @Delete(':id')
-  async deletePolygon(@Param('id', ParseUUIDPipe) geozoneId:string) {
-    return await this.geozoneService.deletePolygon(geozoneId)
+  async deletePolygon(
+    @Param('id', ParseUUIDPipe) geozoneId: string,
+  ): Promise<void> {
+    return await this.geozoneService.deletePolygon(geozoneId);
   }
-
 }
