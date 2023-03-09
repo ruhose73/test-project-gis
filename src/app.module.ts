@@ -6,6 +6,7 @@ import {
 } from './configs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GeozoneModule } from './modules/geozone/geozone.module';
+import { CoordinatesModule } from './modules/coordinates/coordinates.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { GeozoneModule } from './modules/geozone/geozone.module';
       useFactory: getPostgresConfig,
     }),
     GeozoneModule,
+    CoordinatesModule
   ],
   controllers: [],
   providers: [],
