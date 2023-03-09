@@ -8,7 +8,14 @@ import {
   GetPolygonDto,
 } from './dto';
 import { Geozone } from './model';
-import { checkPolygonSql, createPolygonSql, deletePolygonSql, getPolygonByIdSql, getPolygonsSql, updatePolygonSql } from './sql';
+import {
+  checkPolygonSql,
+  createPolygonSql,
+  deletePolygonSql,
+  getPolygonByIdSql,
+  getPolygonsSql,
+  updatePolygonSql,
+} from './sql';
 
 @Injectable()
 export class GeozoneService {
@@ -39,19 +46,21 @@ export class GeozoneService {
 
   //Удаление полигона
   async deletePolygon(geozoneId: string): Promise<void> {
-    await this.geozoneRepository.query(deletePolygonSql(geozoneId))
+    await this.geozoneRepository.query(deletePolygonSql(geozoneId));
   }
 
   //Получение всех полигонов
-  async getPolygons(paginationDto: PaginationDto): Promise<GetPolygonDto[]|[]> {
+  async getPolygons(
+    paginationDto: PaginationDto,
+  ): Promise<GetPolygonDto[] | []> {
     const polygons = await this.geozoneRepository.query(
       getPolygonsSql(paginationDto),
     );
     if (polygons.length > 0) {
-      return  polygons.map((e) =>
+      return polygons.map((e) =>
         e.json_build_object ? e.json_build_object : {},
       );
-    } 
+    }
     return [];
   }
 
@@ -67,8 +76,8 @@ export class GeozoneService {
   }
 
   //Проверка на наличие полигона с таким же названием
-  async checkPolygon(title:string) {
-    return await this.geozoneRepository.query(checkPolygonSql(title))
+  async checkPolygon(title: string) {
+    return await this.geozoneRepository.query(checkPolygonSql(title));
   }
 
   //Собираем мультистроку из массива координат (geoJson multistring)

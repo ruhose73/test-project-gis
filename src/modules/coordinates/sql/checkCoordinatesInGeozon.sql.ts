@@ -1,6 +1,9 @@
-import { checkCoordinatesInGeozonDto } from "../dto";
+import { checkCoordinatesInGeozonDto } from '../dto';
 
-export const checkCoordinatesInGeozonSql = (geozoneId: string, coordinates: checkCoordinatesInGeozonDto) => `
+export const checkCoordinatesInGeozonSql = (
+  geozoneId: string,
+  coordinates: checkCoordinatesInGeozonDto,
+) => `
 SELECT ST_Intersects(
 	(
 		SELECT polygon FROM public."Geozone" WHERE "Geozone"."id" = '${geozoneId}'

@@ -36,7 +36,7 @@ export class GeozoneController {
   ): Promise<GetPolygonDto> {
     return await this.geozoneService.createPolygon(createPolygonDto);
   }
-  
+
   @ApiOperation({ summary: `Получение всех геозон` })
   @ApiResponse({ status: 200, type: [GetPolygonDto] })
   @ApiResponse({ status: 400, description: `BAD_REQUEST` })
@@ -80,7 +80,6 @@ export class GeozoneController {
     return await this.geozoneService.getPolygonById(geozoneId);
   }
 
-  
   @ApiOperation({ summary: `Удаление геозоны по ID` })
   @ApiParam({
     name: 'id',

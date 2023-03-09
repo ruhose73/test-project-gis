@@ -1,7 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Geozone } from 'src/modules/geozone/model';
-//import { User } from 'src/modules/user/model/user.model';
 
 export const getPostgresConfig = async (
   configService: ConfigService,
