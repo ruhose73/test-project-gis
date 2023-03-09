@@ -2,8 +2,8 @@ version: '3.3'
 
 services:
 
-  nest:
-    container_name: nest-plain-pg
+  gis-api:
+    container_name: gis-api
     build: 
       context: .
     depends_on:
